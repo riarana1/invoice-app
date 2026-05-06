@@ -6,7 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { Item } from '@/types.d'
 
 export default function InvoiceTable({ itemList }: { itemList: Item[] }) {
   return (

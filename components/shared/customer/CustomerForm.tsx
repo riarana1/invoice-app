@@ -23,10 +23,10 @@ export default function CustomerForm({ userId }: { userId: string }) {
       {/* Hidden input to pass the owner_id */}
       <input type="hidden" name="owner_id" value={userId} />
 
-      {state?.error && (
-        <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-sm">
-          {state.error}
-        </p>
+      {state?.message && !state.success && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-sm">
+          {state.message}
+        </div>
       )}
 
       <div className="w-full flex items-center space-x-4 mb-3">
@@ -38,6 +38,11 @@ export default function CustomerForm({ userId }: { userId: string }) {
             className="w-full p-2 border border-gray-200 rounded-sm"
             required
           />
+          {state?.errors?.name && (
+            <p className="text-destructive text-xs mt-1">
+              {state.errors.name[0]}
+            </p>
+          )}
         </section>
 
         <section className="w-1/2">
@@ -48,6 +53,11 @@ export default function CustomerForm({ userId }: { userId: string }) {
             className="w-full p-2 border border-gray-200 rounded-sm"
             required
           />
+          {state?.errors?.email && (
+            <p className="text-destructive text-xs mt-1">
+              {state.errors.email[0]}
+            </p>
+          )}
         </section>
       </div>
 
@@ -61,6 +71,11 @@ export default function CustomerForm({ userId }: { userId: string }) {
         className="w-full p-2 border border-gray-200 rounded-sm mb-4"
         required
       />
+      {state?.errors?.address && (
+        <p className="text-destructive text-xs mt-1">
+          {state.errors.address[0]}
+        </p>
+      )}
 
       <Button
         className="bg-blue-500 text-white p-2 rounded-md mb-6 disabled:bg-blue-300"

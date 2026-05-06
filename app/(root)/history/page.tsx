@@ -41,7 +41,7 @@ export default async function History() {
                       <p className="text-sm text-gray-500 mb-1">
                         Invoice - #0{invoice.id} issued to{' '}
                         <span className="font-semibold text-gray-700">
-                          {invoice.customer_id}
+                          {invoice.customer_name || 'N/A'}
                         </span>
                       </p>
                       <h3 className="text-xl font-bold text-gray-800">
@@ -69,7 +69,7 @@ export default async function History() {
               <SearchX className="w-12 h-12 text-gray-400 mx-auto mb-4" />
               <CardTitle className="text-xl mb-2">No Invoices Found</CardTitle>
               <CardDescription>
-                It looks like you haven&apost created any invoices yet.
+                It looks like you haven&apos;t created any invoices yet.
               </CardDescription>
             </Card>
           )}

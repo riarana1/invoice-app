@@ -3,7 +3,6 @@
 import React, { useState, useActionState, useEffect } from 'react'
 import { createInvoice } from '@/lib/actions/invoice.actions'
 import InvoiceTable from './InvoiceTable'
-import type { Item, Customer } from '@/types.d'
 import { useRouter } from 'next/navigation'
 
 interface Props {
@@ -81,7 +80,7 @@ export default function InvoiceForm({ userId, customers }: Props) {
         >
           <option value="">Select a customer</option>
           {customers.map((c) => (
-            <option key={c.id} value={c.id}>
+            <option key={c.name} value={c.name}>
               {c.name}
             </option>
           ))}

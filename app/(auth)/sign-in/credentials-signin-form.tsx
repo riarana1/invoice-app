@@ -1,6 +1,6 @@
 'use client'
 import { useSearchParams } from 'next/navigation'
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,13 +10,16 @@ import { signInDefaultValues } from '@/lib/constants'
 import Link from 'next/link'
 
 export default function CredentialsSignInForm() {
-  const [data, action, isPending] = useActionState(signInWithCredentials, {
-    message: '',
-    success: false,
-  })
+  const [data, action, isPending] = useActionState(signInWithCredentials, null)
 
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
+
+  useEffect(() => {
+    if (data?.success) {
+      window.location.href = callbackUrl
+    }
+  }, [data, callbackUrl])
 
   return (
     <form action={action}>

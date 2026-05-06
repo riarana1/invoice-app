@@ -1,16 +1,23 @@
 'use server'
 
-import { invoices, bankInfo } from '@/db/schema'
+import { invoices, bankInfo, customers } from '@/db/schema'
 import { db } from '@/db'
-import { desc, eq } from 'drizzle-orm'
+import { desc, eq, sql } from 'drizzle-orm'
 import { CreateInvoiceSchema } from '@/lib/validations/invoice'
-import { fromError } from 'zod-validation-error'
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
 import { formatError } from '../utils'
 
 // Define the type for the state managed by useActionState
 type FormState = {
-  error?: string
+  errors?: {
+    owner_id?: string[]
+    customer_id?: string[]
+    title?: string[]
+    items?: string[]
+    total_amount?: string[]
+  }
+  message?: string
   success?: boolean
 } | null
 
@@ -43,7 +50,8 @@ export const createInvoice = async (
 
   if (!validated.success) {
     return {
-      error: fromError(validated.error).toString(),
+      errors: z.flattenError(validated.error).fieldErrors,
+      message: 'Missing Fields. Failed to Create Invoice.',
     }
   }
 
@@ -56,18 +64,26 @@ export const createInvoice = async (
       total_amount: validated.data.total_amount,
     })
     revalidatePath('/history')
-    return { success: true }
+    return { success: true, message: 'Invoice created successfully' }
   } catch {
-    return { error: 'Failed to create invoice in database' }
+    return { message: 'Database Error: Failed to create invoice' }
   }
 }
 
 //👇🏻 get all user's invoices
-export const getUserInvoices = async (user_id: string) => {
+export const getUserInvoices = async (customer_id: string) => {
   return await db
-    .select()
+    .select({
+      id: invoices.id,
+      total_amount: invoices.total_amount,
+      customer_name: customers.name,
+    })
     .from(invoices)
-    .where(eq(invoices.owner_id, user_id))
+    .leftJoin(
+      customers,
+      eq(sql`CAST(${invoices.customer_id} AS INTEGER)`, customers.id),
+    )
+    .where(eq(invoices.owner_id, customer_id))
     .orderBy(desc(invoices.created_at))
 }
 

@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
 
 import { Button } from '@/components/ui/button'
@@ -21,12 +21,15 @@ const SignUpButton = () => {
 }
 
 export default function SignUpForm() {
-  const [data, action] = useActionState(signUp, {
-    success: false,
-    message: '',
-  })
+  const [data, action] = useActionState(signUp, null)
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
+
+  useEffect(() => {
+    if (data?.success) {
+      window.location.href = callbackUrl
+    }
+  }, [data, callbackUrl])
 
   return (
     <form action={action}>
@@ -78,7 +81,7 @@ export default function SignUpForm() {
           <SignUpButton />
         </div>
 
-        {!data.success && (
+        {data && !data.success && (
           <div className="text-center text-destructive">{data.message}</div>
         )}
         <div className="text-center text-sm text-muted-foreground">

@@ -4,14 +4,19 @@ import { db } from '@/db'
 import { customers } from '@/db/schema'
 import { desc, eq } from 'drizzle-orm'
 import { CreateCustomerSchema } from '@/lib/validations/customer'
-import { fromError } from 'zod-validation-error'
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
 
 // Define the type for the state managed by useActionState
 type FormState = {
-  error?: string
-  success?: boolean
+  errors?: {
+    owner_id?: string[]
+    name?: string[]
+    email?: string[]
+    address?: string[]
+  }
   message?: string
+  success?: boolean
 } | null
 
 //👇🏻 get customers list
@@ -44,7 +49,8 @@ export const addCustomer = async (
 
   if (!validated.success) {
     return {
-      error: fromError(validated.error).toString(),
+      errors: z.flattenError(validated.error).fieldErrors,
+      message: 'Invalid input fields. Failed to add customer.',
     }
   }
 
@@ -59,7 +65,7 @@ export const addCustomer = async (
     revalidatePath('/customers') // Update this to your customers list path
     return { success: true, message: 'Customer added successfully' }
   } catch {
-    return { error: 'Failed to add customer to the database' }
+    return { message: 'Database Error: Failed to add customer' }
   }
 }
 

@@ -9,20 +9,39 @@ import {
   signUpFormSchema,
   updateUserSchema,
 } from '../validator'
+import { z } from 'zod'
 import { formatError } from '../utils'
 import { revalidatePath } from 'next/cache'
 import { and, eq } from 'drizzle-orm'
-import z from 'zod'
 
-export async function signUp(_prevState: unknown, formData: FormData) {
+// Define the type for the state managed by useActionState
+type AuthFormState = {
+  errors?: Record<string, string[] | undefined>
+  message?: string
+  success?: boolean
+} | null
+
+export async function signUp(
+  _prevState: AuthFormState,
+  formData: FormData,
+): Promise<AuthFormState> {
+  const validated = signUpFormSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+    confirmPassword: formData.get('confirmPassword'),
+  })
+
+  if (!validated.success) {
+    return {
+      errors: z.flattenError(validated.error).fieldErrors,
+      message: 'Missing Fields. Failed to Register.',
+    }
+  }
+
+  const data = validated.data
+
   try {
-    const data = signUpFormSchema.parse({
-      name: formData.get('name'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      confirmPassword: formData.get('confirmPassword'),
-    })
-
     await db.insert(users).values({
       name: data.name,
       email: data.email,
@@ -30,12 +49,14 @@ export async function signUp(_prevState: unknown, formData: FormData) {
     })
 
     // Automatically sign in after successful registration
+    revalidatePath('/', 'layout')
     await signIn('credentials', {
       email: data.email,
       password: data.password,
+      redirect: false,
     })
 
-    return { success: true, message: 'User created successfully' }
+    return { success: true, message: 'Signed up successfully' }
   } catch (error) {
     // Let redirects from signIn bubble up to Next.js
     if ((error as { digest?: string }).digest?.includes('NEXT_REDIRECT')) {
@@ -54,27 +75,42 @@ export async function signUp(_prevState: unknown, formData: FormData) {
 }
 
 export async function signInWithCredentials(
-  _prevState: unknown,
+  _prevState: AuthFormState,
   formData: FormData,
-) {
+): Promise<AuthFormState> {
+  const validated = signInFormSchema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
+
+  if (!validated.success) {
+    return {
+      errors: z.flattenError(validated.error).fieldErrors,
+      message: 'Invalid email or password format.',
+    }
+  }
+
+  const user = validated.data
+
   try {
-    const user = signInFormSchema.parse({
-      email: formData.get('email'),
-      password: formData.get('password'),
+    revalidatePath('/', 'layout')
+    await signIn('credentials', {
+      ...user,
+      redirect: false,
     })
-    await signIn('credentials', user)
-    return { success: true, message: 'Sign in successfully' }
+
+    return { success: true, message: 'Signed in successfully' }
   } catch (error) {
     if ((error as { digest?: string }).digest?.includes('NEXT_REDIRECT')) {
       throw error
     }
-
     return { success: false, message: 'Invalid email or password' }
   }
 }
 
-export const SignOut = async () => {
-  await signOut()
+export async function handleSignOut() {
+  revalidatePath('/', 'layout')
+  await signOut({ redirectTo: '/sign-in' })
 }
 
 export async function updateUser(user: z.infer<typeof updateUserSchema>) {
