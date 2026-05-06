@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 import Navbar from '../components/shared/header/Navbar'
 import { Geist } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/components/shared/theme-provider'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
 

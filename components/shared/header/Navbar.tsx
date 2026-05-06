@@ -3,7 +3,7 @@
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import Image from 'next/image'
-import DarkLightToggle from '@/components/DarkLightToggle'
+import DarkLightToggle from '@/components/shared/DarkLightToggle'
 
 export default function Navbar() {
   const { data: session, status } = useSession()

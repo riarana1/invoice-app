@@ -26,7 +26,7 @@ export default function CredentialsSignInForm() {
       <input type="hidden" name="callbackUrl" value={callbackUrl} />
       <div className="space-y-6">
         <div>
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email" className="dark:text-slate-300">Email</Label>
           <Input
             id="email"
             name="email"
@@ -34,16 +34,18 @@ export default function CredentialsSignInForm() {
             required
             type="email"
             defaultValue={signInDefaultValues.email}
+            className="dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
           />
         </div>
         <div>
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password" className="dark:text-slate-300">Password</Label>
           <Input
             id="password"
             name="password"
             required
             type="password"
             defaultValue={signInDefaultValues.password}
+            className="dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
           />
         </div>
         <div>
@@ -53,21 +55,21 @@ export default function CredentialsSignInForm() {
         </div>
 
         {data && !data.success && (
-          <div className="text-center text-destructive">{data.message}</div>
+          <div className="text-center text-destructive dark:text-red-400">{data.message}</div>
         )}
         {data &&
           !data.success &&
-          !data.message && ( // Display generic error if action failed but no specific message
-            <div className="text-center text-destructive">
+          !data.message && (
+            <div className="text-center text-destructive dark:text-red-400">
               An unknown error occurred during sign-in. Please try again.
             </div>
           )}
 
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-muted-foreground dark:text-slate-400">
           Don&apos;t have an account?{' '}
           <Link
             target="_self"
-            className="link"
+            className="link text-blue-500 hover:underline dark:text-blue-400"
             href={`/sign-up?callbackUrl=${encodeURIComponent(callbackUrl)}`}
           >
             Sign Up

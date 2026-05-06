@@ -1,10 +1,7 @@
 import { Metadata } from 'next'
-import { Suspense } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
-
-import { auth } from '@/auth'
+import { signOut } from '@/auth'
 import {
   Card,
   CardContent,
@@ -14,21 +11,11 @@ import {
 } from '@/components/ui/card'
 import { APP_NAME } from '@/lib/constants'
 
-import CredentialsSignInForm from './credentials-signin-form'
-
 export const metadata: Metadata = {
-  title: `Sign In - ${APP_NAME}`,
+  title: `Sign Out - ${APP_NAME}`,
 }
 
-export default async function SignIn(props: {
-  searchParams: Promise<{ callbackUrl: string }>
-}) {
-  const { callbackUrl } = await props.searchParams
-  const session = await auth()
-  if (session) {
-    return redirect(callbackUrl || '/')
-  }
-
+export default function SignOutPage() {
   return (
     <main className="flex min-h-screen w-full items-center justify-center bg-slate-50 p-4 dark:bg-slate-950 bg-[radial-gradient(circle_at_top,var(--tw-gradient-stops))] from-blue-50 via-slate-50 to-indigo-50 dark:from-blue-950/30 dark:via-slate-950 dark:to-slate-950">
       <div className="w-full max-w-md">
@@ -38,25 +25,34 @@ export default async function SignIn(props: {
               <Link href="/">
                 <Image
                   src="/assets/icons/logo.svg"
-                  width={32}
-                  height={32}
+                  width={40}
+                  height={40}
                   alt={`${APP_NAME} logo`}
-                  loading="eager"
                   className="dark:invert"
                 />
               </Link>
             </div>
             <CardTitle className="text-2xl font-bold dark:text-white">
-              Sign In
+              Sign Out
             </CardTitle>
             <CardDescription className="dark:text-slate-400">
-              Sign in to your account to continue
+              Are you sure you want to sign out of your account?
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Suspense>
-              <CredentialsSignInForm />
-            </Suspense>
+            <form
+              action={async () => {
+                'use server'
+                await signOut({ redirectTo: '/sign-in' })
+              }}
+            >
+              <button
+                type="submit"
+                className="w-full rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+              >
+                Confirm Sign Out
+              </button>
+            </form>
           </CardContent>
         </Card>
       </div>
