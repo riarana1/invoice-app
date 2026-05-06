@@ -27,7 +27,7 @@ export default async function Dashboard() {
   const bankInfoExists = !!bankInfo
 
   return (
-    <div className="flex min-h-screen w-full bg-gray-50/50">
+    <div className="flex min-h-screen w-full bg-gray-50/50 dark:bg-slate-950 transition-colors duration-300">
       <SideNav />
       <main className="flex-1 p-8">
         <div className="max-w-5xl mx-auto">
@@ -43,12 +43,12 @@ export default async function Dashboard() {
 
           {!bankInfoExists ? (
             <div className="flex flex-col items-center justify-center py-12">
-              <Card className="max-w-md w-full border-dashed border-2 flex flex-col items-center p-8 text-center shadow-none bg-transparent">
-                <div className="bg-red-100 p-4 rounded-full mb-6">
-                  <Landmark className="w-10 h-10 text-red-600" />
+              <Card className="max-w-md w-full border-dashed border-2 flex flex-col items-center p-8 text-center shadow-none bg-transparent dark:border-slate-800">
+                <div className="bg-red-100 dark:bg-red-900/20 p-4 rounded-full mb-6">
+                  <Landmark className="w-10 h-10 text-red-600 dark:text-red-400" />
                 </div>
                 <CardTitle className="text-2xl mb-2">Setup Required</CardTitle>
-                <CardDescription className="text-base mb-8">
+                <CardDescription className="text-base mb-8 dark:text-slate-400">
                   Welcome! To start generating invoices, you first need to
                   configure your bank account details in the settings.
                 </CardDescription>
@@ -61,7 +61,7 @@ export default async function Dashboard() {
               </Card>
             </div>
           ) : (
-            <Card className="shadow-sm border-none">
+            <Card className="shadow-sm border-none dark:bg-slate-900 dark:border-slate-800">
               <CardContent className="pt-6">
                 <InvoiceForm userId={userId} customers={customers} />
               </CardContent>

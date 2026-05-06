@@ -16,7 +16,7 @@ export default function HomePage() {
     }
   }, [status, callbackUrl, router])
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh]">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
       <h1 className="text-4xl font-bold mb-8">
         Welcome to Invoice Management App
       </h1>

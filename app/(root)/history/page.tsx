@@ -19,7 +19,7 @@ export default async function History() {
   const invoices = await getUserInvoices(session.user.id)
 
   return (
-    <div className="flex min-h-screen w-full bg-gray-50/50">
+    <div className="flex min-h-screen w-full bg-gray-50/50 dark:bg-slate-950 transition-colors duration-300">
       <SideNav />
       <main className="flex-1 p-8">
         <div className="max-w-5xl mx-auto">
@@ -35,16 +35,16 @@ export default async function History() {
           {invoices.length > 0 ? (
             <div className="grid gap-4">
               {invoices.map((invoice) => (
-                <Card key={invoice.id} className="shadow-sm">
+                <Card key={invoice.id} className="shadow-sm dark:bg-slate-900 dark:border-slate-800">
                   <CardContent className="p-4 flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500 mb-1">
+                      <p className="text-sm text-gray-500 dark:text-slate-400 mb-1">
                         Invoice - #0{invoice.id} issued to{' '}
-                        <span className="font-semibold text-gray-700">
+                        <span className="font-semibold text-gray-700 dark:text-slate-300">
                           {invoice.customer_name || 'N/A'}
                         </span>
                       </p>
-                      <h3 className="text-xl font-bold text-gray-800">
+                      <h3 className="text-xl font-bold text-gray-800 dark:text-white">
                         {Number(invoice.total_amount).toLocaleString('en-US', {
                           style: 'currency',
                           currency: 'USD', // Assuming USD, adjust as needed
@@ -65,10 +65,10 @@ export default async function History() {
               ))}
             </div>
           ) : (
-            <Card className="max-w-md mx-auto text-center py-12 shadow-sm border-dashed border-2 bg-transparent">
-              <SearchX className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <Card className="max-w-md mx-auto text-center py-12 shadow-sm border-dashed border-2 bg-transparent dark:border-slate-800">
+              <SearchX className="w-12 h-12 text-gray-400 dark:text-slate-500 mx-auto mb-4" />
               <CardTitle className="text-xl mb-2">No Invoices Found</CardTitle>
-              <CardDescription>
+              <CardDescription className="dark:text-slate-400">
                 It looks like you haven&apos;t created any invoices yet.
               </CardDescription>
             </Card>

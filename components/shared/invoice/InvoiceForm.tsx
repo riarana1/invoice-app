@@ -57,11 +57,11 @@ export default function InvoiceForm({ userId, customers }: Props) {
   const totalAmount = itemList.reduce((sum, item) => sum + item.price, 0)
 
   return (
-    <div className="md:w-5/6 w-full h-full p-6">
-      <h2 className="font-bold text-2xl mb-3">Add new invoice</h2>
+    <div className="md:w-5/6 w-full h-full p-6 text-gray-900 dark:text-slate-100">
+      <h2 className="font-bold text-2xl mb-3 dark:text-white">Add new invoice</h2>
 
       {state?.error && (
-        <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <p className="bg-red-100 border border-red-400 text-red-700 dark:bg-red-900/20 dark:border-red-900 dark:text-red-400 px-4 py-3 rounded mb-4">
           {state.error}
         </p>
       )}
@@ -72,10 +72,10 @@ export default function InvoiceForm({ userId, customers }: Props) {
         <input type="hidden" name="items" value={JSON.stringify(itemList)} />
         <input type="hidden" name="total_amount" value={String(totalAmount)} />
 
-        <label htmlFor="customer_id">Customer</label>
+        <label htmlFor="customer_id" className="text-sm font-medium mb-1 dark:text-slate-300">Customer</label>
         <select
           name="customer_id"
-          className="border p-2 rounded-sm mb-3"
+          className="border p-2 rounded-sm mb-3 dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
           required
         >
           <option value="">Select a customer</option>
@@ -86,46 +86,46 @@ export default function InvoiceForm({ userId, customers }: Props) {
           ))}
         </select>
 
-        <label htmlFor="title">Title</label>
+        <label htmlFor="title" className="text-sm font-medium mb-1 dark:text-slate-300">Title</label>
         <input
           name="title"
-          className="border rounded-sm mb-3 py-2 px-3"
+          className="border rounded-sm mb-3 py-2 px-3 dark:bg-slate-800 dark:border-slate-700 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none"
           required
         />
 
         <div className="w-full flex flex-col">
-          <h3 className="my-4 font-bold">Items List</h3>
+          <h3 className="my-4 font-bold dark:text-white border-b dark:border-slate-800 pb-2">Items List</h3>
           <div className="flex space-x-3">
             <div className="flex flex-col w-1/4">
-              <label className="text-sm">Name</label>
+              <label className="text-xs font-semibold uppercase text-gray-500 dark:text-slate-400 mb-1">Name</label>
               <input
                 type="text"
                 value={itemName}
                 onChange={(e) => setItemName(e.target.value)}
-                className="py-2 px-4 mb-6 bg-gray-100"
+                className="py-2 px-4 mb-6 bg-gray-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white rounded-md"
               />
             </div>
             <div className="flex flex-col w-1/4">
-              <label className="text-sm">Cost</label>
+              <label className="text-xs font-semibold uppercase text-gray-500 dark:text-slate-400 mb-1">Cost</label>
               <input
                 type="number"
                 value={itemCost}
                 onChange={(e) => setItemCost(Number(e.target.value))}
-                className="py-2 px-4 mb-6 bg-gray-100"
+                className="py-2 px-4 mb-6 bg-gray-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white rounded-md"
               />
             </div>
             <div className="flex flex-col w-1/4">
-              <label className="text-sm">Quantity</label>
+              <label className="text-xs font-semibold uppercase text-gray-500 dark:text-slate-400 mb-1">Quantity</label>
               <input
                 type="number"
                 value={itemQuantity}
                 onChange={(e) => setItemQuantity(Number(e.target.value))}
-                className="py-2 px-4 mb-6 bg-gray-100"
+                className="py-2 px-4 mb-6 bg-gray-100 dark:bg-slate-800 dark:border-slate-700 dark:text-white rounded-md"
               />
             </div>
             <div className="flex flex-col w-1/4">
-              <p className="text-sm">Price</p>
-              <p className="py-2 px-4 mb-6 bg-gray-100">
+              <p className="text-xs font-semibold uppercase text-gray-500 dark:text-slate-400 mb-1">Price</p>
+              <p className="py-2 px-4 mb-6 bg-gray-100 dark:bg-slate-800 dark:text-white rounded-md">
                 {(itemCost * itemQuantity).toLocaleString()}
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function InvoiceForm({ userId, customers }: Props) {
           <button
             type="button"
             onClick={handleAddItem}
-            className="bg-blue-500 text-white p-2 rounded mb-4"
+            className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded mb-4 transition-colors dark:bg-blue-700 dark:hover:bg-blue-800"
           >
             Add Item
           </button>
@@ -143,7 +143,7 @@ export default function InvoiceForm({ userId, customers }: Props) {
 
         <button
           disabled={isPending}
-          className="bg-blue-800 text-white w-full p-4 rounded my-6 disabled:bg-gray-400"
+          className="bg-blue-700 hover:bg-blue-800 text-white w-full p-4 rounded my-6 disabled:bg-gray-400 dark:disabled:bg-slate-700 transition-colors font-semibold"
           type="submit"
         >
           {isPending ? 'SAVING...' : 'SAVE & PREVIEW INVOICE'}

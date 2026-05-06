@@ -21,7 +21,7 @@ export default async function Customers() {
   const customers = await getCustomers(userId)
 
   return (
-    <div className="flex min-h-screen w-full bg-gray-50/50">
+    <div className="flex min-h-screen w-full bg-gray-50/50 dark:bg-slate-950 transition-colors duration-300">
       <SideNav />
       <main className="flex-1 p-8">
         <div className="max-w-5xl mx-auto">
@@ -33,13 +33,13 @@ export default async function Customers() {
           </header>
 
           <div className="grid gap-8">
-            <Card className="shadow-sm border-none">
+            <Card className="shadow-sm border-none dark:bg-slate-900 dark:border-slate-800">
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Users className="w-5 h-5 text-blue-600" />
+                <CardTitle className="text-lg flex items-center gap-2 dark:text-white">
+                  <Users className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   Add New Customer
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="dark:text-slate-400">
                   Fill in the details to register a new client in your database.
                 </CardDescription>
               </CardHeader>
@@ -48,9 +48,11 @@ export default async function Customers() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-sm border-none">
+            <Card className="shadow-sm border-none dark:bg-slate-900 dark:border-slate-800">
               <CardHeader>
-                <CardTitle>Customer Directory</CardTitle>
+                <CardTitle className="dark:text-white">
+                  Customer Directory
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <CustomersTable customers={customers} />

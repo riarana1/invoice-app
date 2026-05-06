@@ -21,7 +21,7 @@ interface Customer {
   name: string
   email: string
   address: string
-  created_at?: string | null | undefined
+  created_at?: Date | null
 }
 
 interface BankInfo {

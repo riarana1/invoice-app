@@ -3,9 +3,8 @@
 import {
   useEffect,
   useState,
-  useCallback,
   useActionState,
-  startTransition,
+  useTransition,
 } from 'react'
 import { useSession } from 'next-auth/react'
 import SideNav from '@/components/shared/SideNav'
@@ -13,6 +12,7 @@ import {
   getBankInfoByUserId,
   updateBankInfoAction,
 } from '@/lib/actions/invoice.actions'
+import { cn } from '@/lib/utils'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import {
@@ -43,48 +43,27 @@ export default function Settings() {
     currency: '',
   })
 
+  const [, startTransition] = useTransition()
   const [state, formAction, isPending] = useActionState(
     updateBankInfoAction,
     null,
   )
 
-  const fetchBankInfo = useCallback(async () => {
-    if (!userId) return
-    try {
-      const data = await getBankInfoByUserId(userId)
-      if (data) {
-        setBankInfo({
-          account_name: data.account_name,
-          account_number: data.account_number,
-          bank_name: data.bank_name,
-          currency: data.currency,
-        })
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }, [userId])
-
   useEffect(() => {
-    if (status === 'authenticated') {
-      startTransition(() => {
-        fetchBankInfo()
+    if (status === 'authenticated' && userId) {
+      startTransition(async () => {
+        const data = await getBankInfoByUserId(userId)
+        if (data) {
+          setBankInfo({
+            account_name: data.account_name,
+            account_number: data.account_number,
+            bank_name: data.bank_name,
+            currency: data.currency,
+          })
+        }
       })
     }
-  }, [status, fetchBankInfo])
-
-  // Handle the action response (e.g., alerts and refreshing display)
-  useEffect(() => {
-    if (state?.success) {
-      alert(state.message)
-      // Wrap in startTransition to avoid cascading render warning
-      startTransition(() => {
-        fetchBankInfo()
-      })
-    } else if (state?.success === false) {
-      alert(state.message)
-    }
-  }, [state, fetchBankInfo])
+  }, [status, userId])
 
   if (status === 'loading') {
     return <p>Loading...</p>
@@ -92,7 +71,7 @@ export default function Settings() {
 
   return (
     <div className="w-full">
-      <main className="min-h-screen flex items-start bg-gray-50/50">
+      <main className="min-h-screen flex items-start bg-gray-50/50 dark:bg-slate-950 transition-colors duration-300">
         <SideNav />
 
         <div className="flex-1 p-8">
@@ -104,10 +83,22 @@ export default function Settings() {
               </p>
             </div>
 
+            {/* Provide visual feedback for the Action State without re-fetching */}
+            {state?.message && (
+              <div
+                className={cn(
+                  "mb-6 p-4 rounded-lg border text-sm font-medium",
+                  state.success ? "bg-green-50 border-green-200 text-green-700 dark:bg-green-900/20 dark:border-green-900 dark:text-green-400" : "bg-red-50 border-red-200 text-red-700 dark:bg-red-900/20 dark:border-red-900 dark:text-red-400"
+                )}
+              >
+                {state.message}
+              </div>
+            )}
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Left Column: Current Info Summary */}
               <div className="lg:col-span-1 space-y-6">
-                <Card className="border-none shadow-sm bg-blue-600 text-white">
+                <Card className="border-none shadow-sm bg-blue-600 dark:bg-blue-700 text-white">
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
                       <Banknote className="w-5 h-5" />
@@ -147,7 +138,7 @@ export default function Settings() {
               </div>
 
               {/* Right Column: Update Form */}
-              <Card className="lg:col-span-2 shadow-sm">
+              <Card className="lg:col-span-2 shadow-sm dark:bg-slate-900 dark:border-slate-800">
                 <CardHeader>
                   <CardTitle>Bank Details</CardTitle>
                   <CardDescription>

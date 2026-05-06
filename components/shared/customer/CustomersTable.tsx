@@ -35,23 +35,25 @@ export default function CustomersTable({
 
   return (
     <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Action</TableHead>
+      <TableHeader className="dark:bg-slate-800">
+        <TableRow className="dark:border-slate-700">
+          <TableHead className="dark:text-slate-300">Name</TableHead>
+          <TableHead className="dark:text-slate-300">Email</TableHead>
+          <TableHead className="dark:text-slate-300 text-right">Action</TableHead>
         </TableRow>
       </TableHeader>
 
       <TableBody>
         {customers.length > 0 &&
           customers.map((customer) => (
-            <TableRow key={customer.id}>
-              <TableCell className="text-sm">{customer.name}</TableCell>
-              <TableCell className="text-sm">{customer.email}</TableCell>
-              <TableCell className="text-sm">
+            <TableRow key={customer.id} className="dark:border-slate-800">
+              <TableCell className="text-sm font-medium dark:text-white">{customer.name}</TableCell>
+              <TableCell className="text-sm dark:text-slate-400">{customer.email}</TableCell>
+              <TableCell className="text-sm text-right">
                 <Button
-                  className="p-2 bg-red-500 text-red-50 text-xs rounded-sm disabled:bg-gray-400"
+                  variant="destructive"
+                  size="sm"
+                  className="h-8 dark:bg-red-900/50 dark:text-red-200 dark:hover:bg-red-900 transition-colors"
                   onClick={() => handleDelete(customer.id)}
                   disabled={isPending}
                 >

@@ -133,7 +133,7 @@ export default function InvoiceDetailClient(props: Props) {
   }
 
   return (
-    <main className="min-h-screen w-full">
+    <main className="min-h-screen w-full bg-gray-50/50 dark:bg-slate-950 transition-colors duration-300">
       <section className="flex justify-center p-4 space-x-4 mb-6">
         <Button
           className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-blue-500 text-blue-50 hover:bg-blue-600 h-10 px-4 py-2"

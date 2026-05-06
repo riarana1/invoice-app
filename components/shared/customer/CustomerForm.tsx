@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
+import { Loader2 } from 'lucide-react'
 
 export default function CustomerForm({ userId }: { userId: string }) {
   const [state, formAction, isPending] = useActionState(addCustomer, null)
@@ -24,18 +25,18 @@ export default function CustomerForm({ userId }: { userId: string }) {
       <input type="hidden" name="owner_id" value={userId} />
 
       {state?.message && !state.success && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-sm">
+        <div className="bg-red-100 border border-red-400 text-red-700 dark:bg-red-900/20 dark:border-red-900 dark:text-red-400 px-4 py-2 rounded mb-4 text-sm">
           {state.message}
         </div>
       )}
 
       <div className="w-full flex items-center space-x-4 mb-3">
         <section className="w-1/2">
-          <label className="text-sm font-medium">Customer&apos; Name</label>
-          <input
+          <Label className="text-sm font-medium dark:text-slate-300 mb-1.5 block">Customer Name</Label>
+          <Input
             type="text"
             name="name"
-            className="w-full p-2 border border-gray-200 rounded-sm"
+            placeholder="e.g. Acme Corp"
             required
           />
           {state?.errors?.name && (
@@ -46,11 +47,11 @@ export default function CustomerForm({ userId }: { userId: string }) {
         </section>
 
         <section className="w-1/2">
-          <Label className="text-sm font-medium">Email Address</Label>
+          <Label className="text-sm font-medium dark:text-slate-300 mb-1.5 block">Email Address</Label>
           <Input
             type="email"
             name="email"
-            className="w-full p-2 border border-gray-200 rounded-sm"
+            placeholder="customer@example.com"
             required
           />
           {state?.errors?.email && (
@@ -61,14 +62,14 @@ export default function CustomerForm({ userId }: { userId: string }) {
         </section>
       </div>
 
-      <Label htmlFor="address" className="text-sm font-medium">
+      <Label htmlFor="address" className="text-sm font-medium dark:text-slate-300 mb-1.5 block">
         Billing Address
       </Label>
       <Textarea
         name="address"
         id="address"
         rows={3}
-        className="w-full p-2 border border-gray-200 rounded-sm mb-4"
+        className="mb-4"
         required
       />
       {state?.errors?.address && (
@@ -78,10 +79,17 @@ export default function CustomerForm({ userId }: { userId: string }) {
       )}
 
       <Button
-        className="bg-blue-500 text-white p-2 rounded-md mb-6 disabled:bg-blue-300"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white mt-4 transition-colors"
         disabled={isPending}
       >
-        {isPending ? 'Adding...' : 'Add Customer'}
+        {isPending ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Adding...
+          </>
+        ) : (
+          'Add Customer'
+        )}
       </Button>
     </form>
   )

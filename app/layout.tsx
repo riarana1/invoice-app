@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Navbar from '../components/shared/header/Navbar'
 import { Geist } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { ThemeProvider } from '@/components/theme-provider'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' })
 
@@ -23,10 +24,18 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body>
-        <AuthProvider>
-          <Navbar />
-          <main className="container mx-auto p-4">{children}</main>
-        </AuthProvider>
+        <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+          <AuthProvider>
+              <Navbar />
+              <main className="container mx-auto p-4">{children}</main>
+          </AuthProvider>
+        </ThemeProvider>
+
       </body>
     </html>
   )

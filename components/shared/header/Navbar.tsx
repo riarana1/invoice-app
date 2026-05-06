@@ -3,25 +3,27 @@
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import Image from 'next/image'
+import DarkLightToggle from '@/components/DarkLightToggle'
 
 export default function Navbar() {
   const { data: session, status } = useSession()
   const isLoading = status === 'loading'
   return (
-    <nav className="bg-gray-800 p-4 text-white">
+    <nav className="bg-gray-800 dark:bg-slate-950 p-4 text-white border-b border-transparent dark:border-slate-800/50 transition-colors duration-300">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="flex space-x-4">
-          <Link href="/" className="text-white hover:text-gray-300">
+        <div className="flex items-center gap-6">
+          <Link href="/" className="text-white hover:text-gray-300 transition-colors">
             Home
           </Link>
-          <Link href="/about" className="text-white hover:text-gray-300">
+          <Link href="/about" className="text-white hover:text-gray-300 transition-colors">
             About
           </Link>
           {session && (
-            <Link href="/dashboard" className="text-white hover:text-gray-300">
+            <Link href="/dashboard" className="text-white hover:text-gray-300 transition-colors">
               Dashboard
             </Link>
           )}
+          <DarkLightToggle />
         </div>
         <div>
           {isLoading ? (
