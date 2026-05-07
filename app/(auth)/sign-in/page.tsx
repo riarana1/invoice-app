@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { auth } from '@/auth'
@@ -14,7 +12,7 @@ import {
 } from '@/components/ui/card'
 import { APP_NAME } from '@/lib/constants'
 
-import CredentialsSignInForm from './credentials-signin-form'
+import CredentialsSignInForm from './signin-form'
 
 export const metadata: Metadata = {
   title: `Sign In - ${APP_NAME}`,
@@ -34,18 +32,6 @@ export default async function SignIn(props: {
       <div className="w-full max-w-md">
         <Card className="shadow-sm border-none dark:bg-slate-900 dark:border-slate-800">
           <CardHeader className="space-y-1 text-center">
-            <div className="flex justify-center mb-4">
-              <Link href="/">
-                <Image
-                  src="/assets/icons/logo.svg"
-                  width={32}
-                  height={32}
-                  alt={`${APP_NAME} logo`}
-                  loading="eager"
-                  className="dark:invert"
-                />
-              </Link>
-            </div>
             <CardTitle className="text-2xl font-bold dark:text-white">
               Sign In
             </CardTitle>
@@ -54,7 +40,7 @@ export default async function SignIn(props: {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Suspense>
+            <Suspense fallback={null}>
               <CredentialsSignInForm />
             </Suspense>
           </CardContent>

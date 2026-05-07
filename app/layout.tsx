@@ -1,7 +1,6 @@
 import { AuthProvider } from './providers'
 import './globals.css'
 import type { Metadata } from 'next'
-import Navbar from '../components/shared/header/Navbar'
 import { Geist } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { ThemeProvider } from '@/components/shared/theme-provider'
@@ -12,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Invoice App Management',
   description: 'Learn authentication with Next.js and NextAuth.js',
 }
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
@@ -25,17 +24,13 @@ export default function RootLayout({
     >
       <body>
         <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-          <AuthProvider>
-              <Navbar />
-              <main className="container mx-auto p-4">{children}</main>
-          </AuthProvider>
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
-
       </body>
     </html>
   )

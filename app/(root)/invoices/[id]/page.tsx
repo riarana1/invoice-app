@@ -6,8 +6,8 @@ import {
   getBankInfoByUserId,
 } from '@/lib/actions/invoice.actions'
 
-import React, { ComponentProps } from 'react'
-import InvoiceDetailClient from './InvoiceDetailClient'
+import { ComponentProps } from 'react'
+import InvoiceDetailClient from './invoice-detail'
 
 export default async function InvoicesPage({
   params,
@@ -23,7 +23,7 @@ export default async function InvoicesPage({
   if (!invoice) redirect('/history')
 
   const customer = await getCustomerById(invoice.customer_id)
-  const bankInfo = await getBankInfoByUserId(session.user.id)
+  const bankInfo = await getBankInfoByUserId(session.user?.id ?? '')
 
   return (
     <InvoiceDetailClient

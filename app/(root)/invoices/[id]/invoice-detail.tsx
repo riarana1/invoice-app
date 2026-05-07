@@ -41,9 +41,9 @@ const ComponentToPrint = forwardRef<HTMLDivElement, Props>((props, ref) => {
   const { id, customer, invoice, bankInfo } = props // Destructure props
   return (
     <div className="w-full p-4 md:p-8" ref={ref}>
-      <Card className="mx-auto max-w-3xl p-6 shadow-lg">
-        <CardHeader className="border-b pb-4 mb-6">
-          <CardTitle className="text-3xl font-extrabold text-gray-800">
+      <Card className="mx-auto max-w-3xl p-6 shadow-lg bg-white dark:bg-slate-900 border-none transition-colors duration-300">
+        <CardHeader className="border-b dark:border-slate-800 pb-4 mb-6">
+          <CardTitle className="text-3xl font-extrabold text-gray-800 dark:text-gray-100">
             INVOICE #0{id.toString()}
           </CardTitle>
         </CardHeader>
@@ -51,13 +51,13 @@ const ComponentToPrint = forwardRef<HTMLDivElement, Props>((props, ref) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 mb-8">
             {/* Issuer Info */}
             <section>
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 FROM:
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Issuer Name: {bankInfo?.account_name || 'N/A'}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Date:{' '}
                 {invoice?.created_at
                   ? formatDateString(invoice.created_at)
@@ -67,28 +67,34 @@ const ComponentToPrint = forwardRef<HTMLDivElement, Props>((props, ref) => {
 
             {/* Customer Info */}
             <section className="md:text-right">
-              <h3 className="text-lg font-semibold text-gray-700 mb-2">TO:</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                TO:
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Name: {customer?.name || 'N/A'}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Address: {customer?.address || 'N/A'}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Email: {customer?.email || 'N/A'}
               </p>
             </section>
           </div>
 
           {/* Invoice Summary */}
-          <div className="mb-8 p-4 bg-gray-50 rounded-md">
-            <p className="text-sm text-gray-600 mb-1">Subject:</p>
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
+          <div className="mb-8 p-4 bg-gray-50 dark:bg-slate-800/50 rounded-md">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+              Subject:
+            </p>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               {invoice?.title || 'N/A'}
             </h2>
             <div className="text-right">
-              <p className="text-sm text-gray-600">Total Amount</p>
-              <p className="font-extrabold text-3xl text-blue-700">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Total Amount
+              </p>
+              <p className="font-extrabold text-3xl text-blue-700 dark:text-blue-400">
                 {`${bankInfo?.currency || ''}${Number(invoice?.total_amount).toLocaleString('en-US')}`}
               </p>
             </div>
@@ -119,13 +125,13 @@ export default function InvoiceDetailClient(props: Props) {
     setDisabled(true)
     const response = await sendInvoiceAction({
       invoiceID: props.id,
-      items: props.invoice?.items,
-      title: props.invoice?.title,
-      amount: Number(props.invoice?.total_amount),
-      customerEmail: props.customer?.email,
-      issuerName: props.bankInfo?.account_name,
-      accountNumber: Number(props.bankInfo?.account_number),
-      currency: props.bankInfo?.currency,
+      items: props.invoice.items ?? '',
+      title: props.invoice.title ?? '',
+      amount: Number(props.invoice.total_amount),
+      customerEmail: props.customer.email ?? '',
+      issuerName: props.bankInfo.account_name ?? '',
+      accountNumber: Number(props.bankInfo.account_number ?? 0),
+      currency: props.bankInfo.currency ?? '',
     })
     setDisabled(false)
     if (response.success) alert(response.message)

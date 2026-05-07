@@ -19,7 +19,7 @@ export default function EmailTemplate({
   return (
     <div>
       <Heading as="h2" style={{ color: '#0ea5e9' }}>
-        Purhcase Invoice from {issuerName}
+        Purchase Invoice from {issuerName}
       </Heading>
       <Text style={{ marginBottom: 5 }}>Invoice No: INV0{invoiceID}</Text>
       <Heading as="h3"> Payment Details:</Heading>

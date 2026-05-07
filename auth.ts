@@ -1,36 +1,19 @@
 import { DrizzleAdapter } from '@auth/drizzle-adapter'
 import { compareSync } from 'bcrypt-ts-edge'
 import { eq } from 'drizzle-orm'
-import type { NextAuthConfig, DefaultSession } from 'next-auth'
+import type { NextAuthConfig, Session, User } from 'next-auth'
 import NextAuth from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
 import { JWT } from 'next-auth/jwt'
+import CredentialsProvider from 'next-auth/providers/credentials'
 
 import { db } from './db/index'
 import { users } from './db/schema'
-import { NextResponse } from 'next/server'
-
-declare module 'next-auth' {
-  interface Session {
-    user: {
-      id: string
-    } & DefaultSession['user']
-  }
-}
-
-// Extend the JWT type to include custom properties
-declare module 'next-auth/jwt' {
-  interface JWT {
-    name?: string | null
-    sub?: string // 'sub' is typically the user ID, which is a string
-  }
-}
+import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
 
 export const config = {
   pages: {
     signIn: '/sign-in',
-    signOut: '/sign-out',
-    newUser: '/sign-up',
     error: '/sign-in',
   },
   session: {
@@ -70,7 +53,17 @@ export const config = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user, trigger, session }) => {
+    jwt: async ({
+      token,
+      user,
+      trigger,
+      session,
+    }: {
+      token: JWT
+      user?: User
+      trigger?: string
+      session?: Session // Session is optional here during jwt callback
+    }) => {
       if (user) {
         if (user.name === 'NO_NAME' && user.id) {
           token.name = user.email!.split('@')[0]
@@ -89,24 +82,33 @@ export const config = {
 
       return token
     },
-    session: async ({ session, token }) => {
+    session: async ({
+      session,
+      token,
+      user,
+      trigger,
+    }: {
+      token: JWT
+      user?: User
+      trigger?: string
+      session: Session
+    }) => {
       if (session.user) {
-        if (token.name) {
-          session.user.name = token.name
-        }
-        if (token.sub) {
-          session.user.id = token.sub as string
+        session.user.id = token.sub as string
+        if (trigger === 'update' && user?.name) {
+          session.user.name = user.name
         }
       }
       return session
     },
-    authorized({ request, auth }) {
-      const protectedPaths = [
-        /\/profile/,
-        /\/user\/(.*)/,
-        /\/order\/(.*)/,
-        /\/admin/,
-      ]
+    authorized({
+      request,
+      auth,
+    }: {
+      request: NextRequest
+      auth: Session | null
+    }) {
+      const protectedPaths = [/\/dashboard/]
       const { pathname } = request.nextUrl
       if (!auth && protectedPaths.some((p) => p.test(pathname))) return false
       if (!request.cookies.get('sessionCartId')) {
@@ -125,5 +127,4 @@ export const config = {
     },
   },
 } satisfies NextAuthConfig
-
 export const { handlers, auth, signIn, signOut } = NextAuth(config)
